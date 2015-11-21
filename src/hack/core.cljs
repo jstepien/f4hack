@@ -172,10 +172,12 @@
 (defn main []
   #_(enable-console-print!)
   #_(test! 200)
-  (let [textarea (.getElementById js/document "words")]
+  (let [textarea (.getElementById js/document "words")
+        reaction #(react textarea)]
     (if (empty? (.-value textarea))
       (seed! textarea))
-    (js/setTimeout #(react textarea) 5)
-    (set! (.-onkeyup textarea) #(react textarea))))
+    (js/setTimeout reaction 5)
+    (doseq [prop ["onkeyup" "onchange" "onblur"]]
+      (aset textarea prop reaction))))
 
 (set! (.-onload js/window) main)
